@@ -107,7 +107,8 @@ const Footer = () => {
       .footer-social--icons {
         display: flex;
         gap: 2rem;
-  
+        transition: 0.2s ease-in-out;
+    
         div {
           padding: 1rem;
           border-radius: 50%;
