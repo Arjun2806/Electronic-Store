@@ -4,16 +4,20 @@ import reducer from "../Reducer/cartReducer";
 const CartContext = createContext();
 
 const getLocalCartData = () => {
-  let localCartData = localStorage.getItem("arjunCart");
-  if (localCartData == []) {
-    return [];
-  } else {
-    return JSON.parse(localCartData);
-  }
+  let localCartData = localStorage.getItem("thapaCart");
+  // if (localCartData === []) {
+  //   return [];
+  // } else {
+  //   return JSON.parse(localCartData);
+  // }
+  const parsedData = JSON.parse(localCartData);
+  if (!Array.isArray(parsedData)) return [];
+
+  return parsedData;
 };
 
 const initialState = {
-  //cart:[],
+  // cart: [],
   cart: getLocalCartData(),
   total_item: "",
   total_price: "",
@@ -37,24 +41,37 @@ const CartProvider = ({ children }) => {
     dispatch({ type: "SET_INCREMENT", payload: id });
   };
 
+  // to remove the individual item from cart
   const removeItem = (id) => {
     dispatch({ type: "REMOVE_ITEM", payload: id });
   };
 
+  // to clear the cart
   const clearCart = () => {
     dispatch({ type: "CLEAR_CART" });
   };
 
+  // to add the data in localStorage
+  // get vs set
+
   useEffect(() => {
-    dispatch({type: "CART_TOTAL_ITEM"});
-    dispatch({type: "CART_TOTAL_PRICE"});
-    localStorage.setItem("arjunCart", JSON.stringify(state.cart));
+    // dispatch({ type: "CART_TOTAL_ITEM" });
+    // dispatch({ type: "CART_TOTAL_PRICE" });
+    dispatch({ type: "CART_ITEM_PRICE_TOTAL" });
+
+    localStorage.setItem("thapaCart", JSON.stringify(state.cart));
   }, [state.cart]);
 
   return (
     <CartContext.Provider
-      value={{ ...state, addToCart, removeItem, clearCart , setDecrease, setIncrement }}
-    >
+      value={{
+        ...state,
+        addToCart,
+        removeItem,
+        clearCart,
+        setDecrease,
+        setIncrement,
+      }}>
       {children}
     </CartContext.Provider>
   );

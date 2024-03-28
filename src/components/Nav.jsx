@@ -1,51 +1,56 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { FiShoppingCart } from "react-icons/fi";
-import { CgMenu,  CgClose } from "react-icons/cg";
+import { CgMenu, CgClose } from "react-icons/cg";
 import { useCartContext } from "../context/cart_context";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Button } from "../styles/Button";
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const { total_item } = useCartContext();
+  const { loginWithRedirect, isAuthenticated, logout, user } = useAuth0();
+
   const Nav = styled.nav`
-  .navbar-list {
-    display: flex;
-    gap: 4.8rem;
+    .navbar-list {
+      display: flex;
+      gap: 4.8rem;
+      align-items: center;
 
-    li {
-      list-style: none;
+      li {
+        list-style: none;
 
-      .navbar-link {
-        &:link,
-        &:visited {
-          display: inline-block;
-          text-decoration: none;
-          font-size: 1.8rem;
-          text-transform: uppercase;
-          color: ${({ theme }) => theme.colors.black};
-          transition: color 0.3s linear;
-        }
+        .navbar-link {
+          &:link,
+          &:visited {
+            display: inline-block;
+            text-decoration: none;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            color: ${({ theme }) => theme.colors.black};
+            transition: color 0.3s linear;
+          }
 
-        &:hover,
-        &:active {
-          color: ${({ theme }) => theme.colors.helper};
+          &:hover,
+          &:active {
+            color: ${({ theme }) => theme.colors.helper};
+          }
         }
       }
     }
-  }
-  .mobile-navbar-btn {
-    display: none;
+    .mobile-navbar-btn {
+      display: none;
 
-    .close-outline {
+      .close-outline {
+        display: none;
+      }
+    }
+
+    .mobile-navbar-btn[name="close-outline"] {
       display: none;
     }
-  }
-
-  .mobile-navbar-btn[name="close-outline"] {
-    display: none;
-  }
-  .cart-trolley--link {
+    .cart-trolley--link {
       position: relative;
 
       .cart-trolley {
@@ -78,95 +83,95 @@ const Navbar = () => {
       padding: 0.8rem 1.4rem;
     }
 
-  @media (max-width: ${({ theme }) => theme.media.mobile}) {
-    .mobile-navbar-btn {
-      display: inline-block;
-      z-index: 999;
-      border: ${({ theme }) => theme.colors.black};
+    @media (max-width: ${({ theme }) => theme.media.mobile}) {
+      .mobile-navbar-btn {
+        display: inline-block;
+        z-index: 999;
+        border: ${({ theme }) => theme.colors.black};
 
-      .mobile-nav-icon {
-        font-size: 4.2rem;
-        color: ${({ theme }) => theme.colors.black};
+        .mobile-nav-icon {
+          font-size: 4.2rem;
+          color: ${({ theme }) => theme.colors.black};
+        }
       }
-    }
 
-    /* hide the original nav menu  */
-    .navbar-list {
-      width: 100vw;
-      height: 100vh;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-color: #fff;
+      /* hide the original nav menu  */
+      .navbar-list {
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #fff;
 
-      display: flex;
-      justify-content: center;
-      align-content: center;
-      flex-direction: column;
-      text-align: center;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        flex-direction: column;
+        text-align: center;
 
-      transform: translateX(100%);
+        transform: translateX(100%);
 
-      visibility: hidden;
-      opacity: 0;
+        visibility: hidden;
+        opacity: 0;
 
-      li {
-        .navbar-link {
-          &:link,
-          &:visited {
-            font-size: 4.2rem;
-          }
+        li {
+          .navbar-link {
+            &:link,
+            &:visited {
+              font-size: 4.2rem;
+            }
 
-          &:hover,
-          &:active {
-            color: ${({ theme }) => theme.colors.helper};
+            &:hover,
+            &:active {
+              color: ${({ theme }) => theme.colors.helper};
+            }
           }
         }
       }
-    }
 
-    .active .mobile-nav-icon {
-      display: none;
-      font-size: 4.2rem;
-      position: absolute;
-      top: 3%;
-      right: 10%;
-      color: ${({ theme }) => theme.colors.black};
-      z-index: 9999;
-    }
+      .active .mobile-nav-icon {
+        display: none;
+        font-size: 4.2rem;
+        position: absolute;
+        top: 3%;
+        right: 10%;
+        color: ${({ theme }) => theme.colors.black};
+        z-index: 9999;
+      }
 
-    .active .close-outline {
-      display: inline-block;
-    }
+      .active .close-outline {
+        display: inline-block;
+      }
 
-    .active .navbar-list {
-      visibility: visible;
-      opacity: 1;
-      transform: translateX(0);
-      z-index: 999;
-    }
-    .cart-trolley--link {
-      position: relative;
-
-      .cart-trolley {
+      .active .navbar-list {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(0);
+        z-index: 999;
+      }
+      .cart-trolley--link {
         position: relative;
-        font-size: 5.2rem;
+
+        .cart-trolley {
+          position: relative;
+          font-size: 5.2rem;
+        }
+
+        .cart-total--item {
+          width: 4.2rem;
+          height: 4.2rem;
+          font-size: 2rem;
+        }
       }
 
-      .cart-total--item {
-        width: 4.2rem;
-        height: 4.2rem;
-        font-size: 2rem;
+      .user-logout,
+      .user-login {
+        font-size: 2.2rem;
+        padding: 0.8rem 1.4rem;
       }
     }
-
-    .user-logout,
-    .user-login {
-      font-size: 2.2rem;
-      padding: 0.8rem 1.4rem;
-    }
-  }
-`;
+  `;
 
   return (
     <Nav>
@@ -176,7 +181,8 @@ const Navbar = () => {
             <NavLink
               className="navbar-link"
               onClick={() => setOpenMenu(false)}
-              to="/">
+              to="/"
+            >
               Home
             </NavLink>
           </li>
@@ -184,7 +190,8 @@ const Navbar = () => {
             <NavLink
               className="navbar-link"
               onClick={() => setOpenMenu(false)}
-              to="/about">
+              to="/about"
+            >
               About
             </NavLink>
           </li>
@@ -192,7 +199,8 @@ const Navbar = () => {
             <NavLink
               className="navbar-link"
               onClick={() => setOpenMenu(false)}
-              to="/products">
+              to="/products"
+            >
               Products
             </NavLink>
           </li>
@@ -200,18 +208,43 @@ const Navbar = () => {
             <NavLink
               className="navbar-link"
               onClick={() => setOpenMenu(false)}
-              to="/contact">
+              to="/contact"
+            >
               Contact
             </NavLink>
-            </li>
+          </li>
+
+ {isAuthenticated && <p>Welcome, {user.name}</p>} 
+
+          {isAuthenticated ? (
             <li>
+              <Button
+                onClick={() =>
+                  logout({ logoutParams: { returnTo: window.location.origin } })
+                }
+              >
+                Logout
+              </Button>
+            </li>
+          ) : (
+            <li>
+              <Button onClick={() => loginWithRedirect()}>Log In</Button>
+            </li>
+          )}
+
+          
+
+
+          <li>
             <NavLink to="/cart" className="navbar-link cart-trolley--link">
-              <FiShoppingCart className="cart-trolley" onClick={() => setOpenMenu(false)} />
+              <FiShoppingCart
+                className="cart-trolley"
+                onClick={() => setOpenMenu(false)}
+              />
               <span className="cart-total--item"> {total_item} </span>
             </NavLink>
           </li>
         </ul>
-
 
         {/* //nav icon */}
         <div className="mobile-navbar-btn">
